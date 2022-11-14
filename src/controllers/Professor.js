@@ -6,35 +6,47 @@ export async function criarTabelaProfessor() {
     });
 }
 
-export async function cadastrarProfessor(professor) {
+export async function selecionarProfessores(req, res) {
+    openDb().then(db => {
+        db.all("SELECT * FROM Professor")
+        .then(professores => res.json(professores))
+    });
+}
+
+export async function selecionarProfessor(req, res) {
+    let idProfessor = req.body.id;
+    openDb().then(db => {
+        db.get("SELECT * FROM Professor WHERE id=?", [idProfessor])
+        .then(professor => res.json(professor))
+    });
+}
+
+export async function cadastrarProfessor(req, res) {
+    let professor = req.body;
     openDb().then(db => {
         db.run("INSERT INTO Professor (nome, cpf, titulo_academico, disciplina_id) VALUES (?,?,?,?)", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina_id])
     });
+    res.json({
+        "statusCode": 200
+    })
 }
 
-export async function atualizarDadosProfessor(professor) {
+export async function atualizarDadosProfessor(req, res) {
+    let professor = req.body;
     openDb().then(db => {
-        db.run("UPDATE Professor SET nome=?, cpf=?, titulo_academico=?, disciplina=? WHERE id=?", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina, professor.id])
+        db.run("UPDATE Professor SET nome=?, cpf=?, titulo_academico=?, disciplina_id=? WHERE id=?", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina, professor.id])
     });
+    res.json({
+        "statusCode": 200
+    })
 }
 
-export async function selecionarProfessores() {
-    return openDb().then(db => {
-        return db.all("SELECT * FROM Professor")
-        .then(res=>res)
-    });
-}
-
-export async function selecionarProfessor(id) {
-    return openDb().then(db => {
-        return db.get("SELECT * FROM Professor WHERE id=?", [id])
-        .then(res=>res)
-    });
-}
-
-export async function deletarProfessor(id) {
-    return openDb().then(db => {
-        return db.get("DELETE FROM Professor WHERE id=?", [id])
-        .then(res=>res)
+export async function deletarProfessor(req, res) {
+    let idProfessor = req.body.id;
+    openDb().then(db => {
+         db.get("DELETE FROM Professor WHERE id=?", [idProfessor])
+        .then(() => res.json({
+            "statusCode": 200
+        }))
     });
 }
