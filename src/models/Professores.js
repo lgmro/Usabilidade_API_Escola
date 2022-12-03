@@ -14,7 +14,7 @@ export async function selecionarProfessores(req, res) {
 }
 
 export async function selecionarProfessor(req, res) {
-    let idProfessor = req.body.id;
+    let idProfessor = req.params.id;
     openDb().then(db => {
         db.get("SELECT * FROM Professor WHERE id=?", [idProfessor])
         .then(professor => res.json(professor))
@@ -26,27 +26,23 @@ export async function cadastrarProfessor(req, res) {
     openDb().then(db => {
         db.run("INSERT INTO Professor (nome, cpf, titulo_academico, disciplina_id) VALUES (?,?,?,?)", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina_id])
     });
-    res.json({
-        "statusCode": 200
-    })
+    res.status(201).send(
+       "Cadastrado com sucesso"
+    );
 }
 
 export async function atualizarDadosProfessor(req, res) {
     let professor = req.body;
     openDb().then(db => {
-        db.run("UPDATE Professor SET nome=?, cpf=?, titulo_academico=?, disciplina_id=? WHERE id=?", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina, professor.id])
+        db.run("UPDATE Professor SET nome=?, cpf=?, titulo_academico=?, disciplina_id=? WHERE id=?", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina_id, professor.id])
     });
-    res.json({
-        "statusCode": 200
-    })
+    res.send("Aleração realizada!")
 }
 
 export async function deletarProfessor(req, res) {
-    let idProfessor = req.body.id;
+    let idProfessor = req.params.id;
     openDb().then(db => {
          db.get("DELETE FROM Professor WHERE id=?", [idProfessor])
-        .then(() => res.json({
-            "statusCode": 200
-        }))
+        .then(() => res.send("O professor foi excluído do Banco de Dados com sucesso"));
     });
 }

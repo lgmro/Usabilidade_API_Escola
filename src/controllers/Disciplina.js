@@ -1,46 +1,12 @@
-import { openDb } from "../configDB.js";
+import { Router } from "express";
+import { atualizarDisciplina, cadastrarDisciplina, deletarDisciplina, selecionarDisciplina, selecionarDisciplinas } from "../models/Disciplina.js";
 
-export async function selecionarDisciplinas(req, res) {
-    openDb().then(db => {
-        db.all("SELECT * FROM Disciplina")
-        .then(disciplinas => res.json(disciplinas))
-    });
-}
+const disciplina_routes = Router();
 
-export async function selecionarDisciplina(req, res) {
-    let idDisciplina = req.body.id;
-    openDb().then(db => {
-        db.get("SELECT * FROM Professor WHERE id=?", [idDisciplina])
-        .then(disciplina => res.json(disciplina))
-    });
-}
+disciplina_routes.get("/disciplinas", selecionarDisciplinas);
+disciplina_routes.get("/disciplinas/:id", selecionarDisciplina);
+disciplina_routes.post("/disciplinas", cadastrarDisciplina);
+disciplina_routes.put("/disciplinas", atualizarDisciplina);
+disciplina_routes.delete("/disciplinas/:id", deletarDisciplina);
 
-export async function cadastrarDisciplina(req, res) {
-    let disciplina = req.body;
-    openDb().then(db => {
-        db.run("INSERT INTO Disciplina (nome, sala_id) VALUES (?,?,)", [disciplina.nome, disciplina.sala_id])
-    });
-    res.json({
-        "statusCode": 200
-    })
-}
-
-export async function atualizarDisciplina(req, res) {
-    let disciplina = req.body;
-    openDb().then(db => {
-        db.run("UPDATE Disciplina SET nome=?, sala_id=? WHERE id=?", [disciplina.nome, disciplina.sala_id])
-    });
-    res.json({
-        "statusCode": 200
-    })
-}
-
-export async function deletarDisciplina(req, res) {
-    let idDisciplina = req.body.id;
-    openDb().then(db => {
-         db.get("DELETE FROM Disciplina WHERE id=?", [idDisciplina])
-        .then(() => res.json({
-            "statusCode": 200
-        }))
-    });
-}
+export default disciplina_routes;
