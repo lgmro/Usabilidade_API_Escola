@@ -26,7 +26,11 @@ export async function cadastrarDisciplina(req, res) {
 }
 
 export async function atualizarDisciplina(req, res) {
-    let disciplina = req.body;
+    let disciplina = {
+        nome: req.body.nome,
+        sala_id: req.body.sala_id,
+        id: req.params.id,
+    };
     openDb().then(db => {
         db.run("UPDATE Disciplina SET nome=?, sala_id=? WHERE id=?", [disciplina.nome, disciplina.sala_id, disciplina.id])
     });
