@@ -12,6 +12,13 @@ app.use(cors());
 app.use(express.json());
 app.use(professores, disciplina, alunos, sala, escola);
 
+
+//Rota inicial
+app.get("/", (req, res) => res.json({
+    "statusCode": 200,
+    "messagem": "API Escola Hogwarts de Azkaban"
+}));
+
 //Quando não encontrar alguma rota
 app.use((req,res,next) => {
     const erro = new Error('Não Encontrado');
