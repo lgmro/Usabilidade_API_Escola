@@ -1,6 +1,7 @@
 import alunos from "./controllers/Alunos.js";
 import professores from "./controllers/Professores.js";
 import disciplina from "./controllers/Disciplina.js";
+import sala from "./controllers/Sala.js";
 import express from "express";
 import cors from "cors";
 
@@ -8,7 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(professores, disciplina, alunos);
+app.use(professores, disciplina, alunos, sala);
 
 //Quando não encontrar alguma rota
 app.use((req,res,next) => {
