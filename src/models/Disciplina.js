@@ -10,7 +10,7 @@ export async function selecionarDisciplinas(req, res) {
 export async function selecionarDisciplina(req, res) {
     let idDisciplina = req.params.id;
     openDb().then(db => {
-        db.get("SELECT * FROM Professor WHERE id=?", [idDisciplina])
+        db.get("SELECT * FROM Disciplina WHERE id=?", [idDisciplina])
         .then(disciplina => res.json(disciplina))
     });
 }
