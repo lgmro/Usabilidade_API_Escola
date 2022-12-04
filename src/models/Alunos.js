@@ -2,7 +2,7 @@ import { openDb } from "../configDB.js";
 
 export async function criarTabelaAluno() {
     openDb().then(db => {
-        db.exec("CREATE TABLE IF NOT EXISTS Aluno (id INTEGER PRIMARY KEY NOT NULL, nome TEXT NOT NULL, cpf TEXT NOT NULL, numero_matricula INTEGER, sala_id INTEGER, FOREIGN KEY (disciplina_id) REFERENCES Disciplina (id))")
+        db.exec("CREATE TABLE IF NOT EXISTS Aluno (id INTEGER PRIMARY KEY NOT NULL, nome TEXT NOT NULL, cpf TEXT NOT NULL, numero_matricula INTEGER, sala_id INTEGER, FOREIGN KEY (sala_id) REFERENCES Sala (id))")
     });
 }
 
