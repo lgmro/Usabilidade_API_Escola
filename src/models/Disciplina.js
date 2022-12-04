@@ -1,5 +1,11 @@
 import { openDb } from "../configDB.js";
 
+export async function criarTabelaDisciplina() {
+    openDb().then(db => {
+        db.exec("CREATE TABLE IF NOT EXISTS Disciplina (id INTEGER PRIMARY KEY NOT NULL, nome TEXT NOT NULL, sala_id TEXT NOT NULL, FOREIGN KEY (sala_id) REFERENCES Sala (id))")
+    });
+}
+
 export async function selecionarDisciplinas(req, res) {
     openDb().then(db => {
         db.all("SELECT * FROM Disciplina")
@@ -10,7 +16,7 @@ export async function selecionarDisciplinas(req, res) {
 export async function selecionarDisciplina(req, res) {
     let idDisciplina = req.params.id;
     openDb().then(db => {
-        db.get("SELECT * FROM Professor WHERE id=?", [idDisciplina])
+        db.get("SELECT * FROM Disciplina WHERE id=?", [idDisciplina])
         .then(disciplina => res.json(disciplina))
     });
 }
