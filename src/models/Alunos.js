@@ -24,17 +24,27 @@ export async function selecionarAluno(req, res) {
 export async function cadastrarAluno(req, res) {
     let aluno = req.body;
     openDb().then(db => {
-        db.run("INSERT INTO Aluno (nome, cpf, numero_matricula, sala_id) VALUES (?,?,?,?)", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.sala_id])
+        db.get("SELECT 1 FROM Aluno WHERE cpf=? OR numero_matricula=?", [aluno.cpf, aluno.numero_matricula]).then(existe => {
+            if (!!existe === true) {
+                res.send("Já existe um aluno com esse CPF e/ou Matrícula.")
+            } else {
+                if (aluno.sala_id === 2 || aluno.sala_id === 3) {
+                    res.send("Este aluno precisa ser aprovado no módulo 1")
+                } else {
+                    db.run("INSERT INTO Aluno (nome, cpf, numero_matricula) VALUES (?,?,?,?)", [aluno.nome, aluno.cpf, aluno.numero_matricula])
+                    res.send(
+                        "Cadastrado com sucesso"
+                     );
+                }
+            }
+        }) 
     });
-    res.status(201).send(
-       "Cadastrado com sucesso"
-    );
 }
 
 export async function atualizarDadosAluno(req, res) {
     let aluno = req.body;
     openDb().then(db => {
-        db.run("UPDATE Aluno SET nome=?, cpf=?, numero_matricula=?, sala_id=? WHERE id=?", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.sala_id, aluno.id])
+        db.run("UPDATE Aluno SET nome=?, cpf=?, numero_matricula=? WHERE id=?", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.id])
     });
     res.send("Aleração realizada!")
 }
