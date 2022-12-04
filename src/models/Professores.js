@@ -40,7 +40,7 @@ export async function atualizarDadosProfessor(req, res) {
         id: req.params.id,
     };
     openDb().then(db => {
-        db.run("UPDATE Professor SET nome=?, cpf=?, titulo_academico=?, disciplina_id=? WHERE id=?", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina_id, professor.id])
+        db.run("UPDATE Professor SET nome=?, cpf=?, titulo_academico=? WHERE id=?", [professor.nome, professor.cpf, professor.titulo_academico, professor.id])
     });
     res.send("Aleração realizada!")
 }
