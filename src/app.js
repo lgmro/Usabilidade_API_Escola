@@ -3,6 +3,7 @@ import professores from "./controllers/Professores.js";
 import disciplina from "./controllers/Disciplina.js";
 import sala from "./controllers/Sala.js";
 import escola from "./controllers/Escola.js";
+import turma from "./controllers/Turma.js";
 import express from "express";
 import cors from "cors";
 
@@ -10,7 +11,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(professores, disciplina, alunos, sala, escola);
+app.use(professores, disciplina, alunos, sala, escola, turma);
 
 
 //Rota inicial
