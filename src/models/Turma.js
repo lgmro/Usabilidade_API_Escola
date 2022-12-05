@@ -1,9 +1,8 @@
 import { openDb } from "../configDB.js";
-import { selecionarAluno } from "./Alunos.js";
 
-export async function criarTabelaAluno() {
+export async function criarTabelaTurma() {
     openDb().then(db => {
-        db.exec("CREATE TABLE IF NOT EXISTS Turma (id INTEGER PRIMARY KEY NOT NULL, nome TEXT NOT NULL, cpf TEXT NOT NULL, numero_matricula INTEGER, sala_id INTEGER, FOREIGN KEY (sala_id) REFERENCES Sala (id))")
+        db.exec("CREATE TABLE IF NOT EXISTS Turma (id INTEGER PRIMARY KEY NOT NULL, disciplina_id INTEGER, professor_id INTEGER, FOREIGN KEY (disciplina_id) REFERENCES Disciplina(id), FOREIGN KEY (sala_id) REFERENCES Sala (id))")
     });
 }
 
@@ -25,7 +24,7 @@ export async function selecionarTurma(req, res) {
 export async function cadastrarTurma(req, res) {
     let turma = req.body;
     openDb().then(db => {
-        db.run("INSERT INTO Turma (disciplina_id, professor_id, sala_id) VALUES (?,?,?,?)", [turma.disciplina_id, turma.professor_id, turma.sala_id])
+        db.run("INSERT INTO Turma (disciplina_id, professor_id) VALUES (?,?,?,?)", [turma.disciplina_id, turma.professor_id])
     });
     res.status(201).send(
        "Cadastrado com sucesso"
@@ -34,14 +33,12 @@ export async function cadastrarTurma(req, res) {
 
 export async function atualizarDadosTurma(req, res) {
     let turma = {
-        nome: req.body.nome,
-        cpf: req.body.cpf,
-        numero_matricula: req.body.numero_matricula,
-        sala_id: req.body.sala_id,
+        disciplina_id: req.body.disciplina_id,
+        professor_id: req.body.professor_id,
         id: req.params.id,
     };
     openDb().then(db => {
-        db.run("UPDATE Turma SET disciplina_id=?, professor_id=?, sala_id=? WHERE id=?", [turma.disciplina_id, turma.professor_id, turma.sala_id, turma.id])
+        db.run("UPDATE Turma SET disciplina_id=?, professor_id=? WHERE id=?", [turma.disciplina_id, turma.professor_id, turma.id])
     });
     res.send("Aleração realizada!")
 }
