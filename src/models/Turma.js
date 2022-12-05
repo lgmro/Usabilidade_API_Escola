@@ -24,7 +24,7 @@ export async function selecionarTurma(req, res) {
 export async function cadastrarTurma(req, res) {
     let turma = req.body;
     openDb().then(db => {
-        db.run("INSERT INTO Turma (disciplina_id, professor_id) VALUES (?,?,?,?)", [turma.disciplina_id, turma.professor_id])
+        db.run("INSERT INTO Turma (disciplina_id, professor_id) VALUES (?,?)", [turma.disciplina_id, turma.professor_id])
     });
     res.status(201).send(
        "Cadastrado com sucesso"
