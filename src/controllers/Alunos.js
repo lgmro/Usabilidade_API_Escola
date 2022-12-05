@@ -3,10 +3,10 @@ import { selecionarAlunos, selecionarAluno, cadastrarAluno, atualizarDadosAluno,
 
 const Alunos_routes = Router();
 
-Alunos_routes.get("/Alunos", selecionarAlunos);
-Alunos_routes.get("/Alunos/:id", selecionarAluno);
-Alunos_routes.post("/Alunos", cadastrarAluno);
-Alunos_routes.put("/Alunos", atualizarDadosAluno);
-Alunos_routes.delete("/Alunos/:id", deletarAluno);
+Alunos_routes.get("/alunos", selecionarAlunos);
+Alunos_routes.get("/alunos/:id", selecionarAluno);
+Alunos_routes.post("/alunos", cadastrarAluno);
+Alunos_routes.put("/alunos/:id", atualizarDadosAluno);
+Alunos_routes.delete("/alunos/:id", deletarAluno);
 
 export default Alunos_routes;

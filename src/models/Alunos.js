@@ -32,7 +32,13 @@ export async function cadastrarAluno(req, res) {
 }
 
 export async function atualizarDadosAluno(req, res) {
-    let aluno = req.body;
+    let aluno = {
+        nome: req.body.nome,
+        cpf: req.body.cpf,
+        numero_matricula: req.body.numero_matricula,
+        sala_id: req.body.sala_id,
+        id: req.params.id,
+    };
     openDb().then(db => {
         db.run("UPDATE Aluno SET nome=?, cpf=?, numero_matricula=?, sala_id=? WHERE id=?", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.sala_id, aluno.id])
     });

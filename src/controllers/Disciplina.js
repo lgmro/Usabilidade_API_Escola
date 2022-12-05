@@ -8,7 +8,7 @@ criarTabelaDisciplina()
 disciplina_routes.get("/disciplinas", selecionarDisciplinas);
 disciplina_routes.get("/disciplinas/:id", selecionarDisciplina);
 disciplina_routes.post("/disciplinas", cadastrarDisciplina);
-disciplina_routes.put("/disciplinas", atualizarDisciplina);
+disciplina_routes.put("/disciplinas/:id", atualizarDisciplina);
 disciplina_routes.delete("/disciplinas/:id", deletarDisciplina);
 
 export default disciplina_routes;
