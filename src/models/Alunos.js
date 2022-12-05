@@ -29,7 +29,7 @@ export async function cadastrarAluno(req, res) {
                 res.send("Já existe um aluno com esse CPF e/ou Matrícula.")
             } else {
                 db.run("INSERT INTO Aluno (nome, cpf, numero_matricula, sala_id) VALUES (?,?,?,?)", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.sala_id])
-                res.send(
+                res.status(201).send(
                     "Cadastrado com sucesso"
                 ); 
             }
