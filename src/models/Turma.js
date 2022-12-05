@@ -58,43 +58,33 @@ export async function matricularAlunoTurma(req, res) {
     let turmaId = req.params.id;
     let body = req.body;
 
-    let aluno = [];
     const bla = body.sala_id - 1;
-    //const alunoMatriculado = res.status(200).send("Aluno Matriculado");
-    //const badRequest = res.status(400).send(`Aluno precisa ter sido aprovado no ${bla}`);
     
-    //TODO: fazer request para saber modulo aluno
     await openDb().then(db => {
-        db.get("SELECT * FROM Aluno WHERE id=?", [body.aluno_id], (err, rows) => {
-            callback(rows)
-        })
-        .then(result => {
-            aluno = result
-            callback(null, row)
+        db.get("SELECT * FROM Aluno WHERE id=?", [body.aluno_id])
+        .then(aluno => {
+            //valida se o aluno está no modulo anterior ao que quer matricular
+            if (aluno.sala_id === bla){
+                openDb().then(db => {
+                    db.get("SELECT * FROM Boletim WHERE aluno_id=?", [body.aluno_id])
+                    .then(boletim => {
+                        //valida se aluno foi aprovado
+                        if(boletim.aprovacao){
+                            openDb().then(db => {
+                                db.run("INSERT INTO MatricularAluno (turma_id, aluno_id) VALUES (?,?)", [turmaId, body.aluno_id])
+                            });
 
+                            //Todo: fazer update do sala_id do aluno no banco
+
+                            //Todo: update do boletim do aluno para excluir a nota dele ou ver uma forma de criar um novo boletim
+                        }
+                        res.send("Aluno Matriculado");
+                    })
+                });
+        
+            } else {
+                return res.status(400).send("Aluno Náo Matriculado");
+            }
         })
     });
-    console.log(rows);
-    if (aluno.sala_id === bla){
-
-        let boletim = [];
-        await openDb().then(db => {
-            db.get("SELECT * FROM Boletim WHERE aluno_id=?", [body.aluno_id])
-            .then(result => { boletim = result })
-        });
-
-        if(boletim.aprovacao){
-            await openDb().then(db => {
-                db.run("INSERT INTO MatricularAluno (turma_id, aluno_id) VALUES (?,?)", [turmaId, body.aluno_id])
-            });
-        }
-        console.log("body ...", body);
-        console.log("aluno .....", aluno);
-        console.log("boletim ..... ", boletim);
-        res.status(200).send("Aluno Matriculado");
-    } else {
-        console.log("body ...", body);
-        console.log("aluno .....", aluno);
-        return res.status(300).send("Aluno Matriculado");
-    }
 }
