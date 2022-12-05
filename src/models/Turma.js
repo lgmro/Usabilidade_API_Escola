@@ -85,3 +85,16 @@ export async function matricularAlunoTurma(req, res) {
         })
     });
 }
+
+export async function pegarAlunosTurma(req, res) {
+    let idTurma = req.params.id;
+    openDb().then(async db => {
+         let matriculas = await db.all("SELECT * FROM MatricularAluno WHERE turma_id=?", [idTurma])
+         let alunosTurma = await Promise.all(matriculas.map(async (val) => {
+            let aluno = await db.get("SELECT * FROM Aluno WHERE id=?", [val.aluno_id])
+            return aluno
+        }))
+        res.json(alunosTurma)
+    });
+    
+}
