@@ -1,5 +1,11 @@
 import { openDb } from "../configDB.js";
 
+export async function criarTabelaDisciplina() {
+    openDb().then(db => {
+        db.exec("CREATE TABLE IF NOT EXISTS Disciplina (id INTEGER PRIMARY KEY NOT NULL, nome TEXT NOT NULL, sala_id TEXT NOT NULL, FOREIGN KEY (sala_id) REFERENCES Sala (id))")
+    });
+}
+
 export async function selecionarDisciplinas(req, res) {
     openDb().then(db => {
         db.all("SELECT * FROM Disciplina")

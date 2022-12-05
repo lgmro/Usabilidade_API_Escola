@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { selecionarProfessor, selecionarProfessores, cadastrarProfessor, atualizarDadosProfessor, deletarProfessor} from "../models/Professores.js";
+import { criarTabelaProfessor, selecionarProfessor, selecionarProfessores, cadastrarProfessor, atualizarDadosProfessor, deletarProfessor} from "../models/Professores.js";
 
 const professor_routes = Router();
+
+criarTabelaProfessor()
 
 professor_routes.get("/professores", selecionarProfessores);
 professor_routes.get("/professores/:id", selecionarProfessor);

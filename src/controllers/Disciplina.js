@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { atualizarDisciplina, cadastrarDisciplina, deletarDisciplina, selecionarDisciplina, selecionarDisciplinas } from "../models/Disciplina.js";
+import { criarTabelaDisciplina, atualizarDisciplina, cadastrarDisciplina, deletarDisciplina, selecionarDisciplina, selecionarDisciplinas } from "../models/Disciplina.js";
 
 const disciplina_routes = Router();
+
+criarTabelaDisciplina()
 
 disciplina_routes.get("/disciplinas", selecionarDisciplinas);
 disciplina_routes.get("/disciplinas/:id", selecionarDisciplina);
