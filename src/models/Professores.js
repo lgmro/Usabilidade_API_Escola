@@ -24,11 +24,17 @@ export async function selecionarProfessor(req, res) {
 export async function cadastrarProfessor(req, res) {
     let professor = req.body;
     openDb().then(db => {
-        db.run("INSERT INTO Professor (nome, cpf, titulo_academico, disciplina_id) VALUES (?,?,?,?)", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina_id])
-    });
-    res.status(201).send(
-       "Cadastrado com sucesso"
-    );
+        db.get("SELECT 1 FROM Professor WHERE cpf=?", [professor.cpf]).then(existe => {
+            if (!!existe === true) {
+                res.send("Já existe um professor com esse CPF.")
+            } else {
+                db.run("INSERT INTO Professor (nome, cpf, titulo_academico, disciplina_id) VALUES (?,?,?,?)", [professor.nome, professor.cpf, professor.titulo_academico, professor.disciplina_id])
+                res.status(201).send(
+                    "Cadastrado com sucesso"
+                ); 
+            }
+        }) 
+});
 }
 
 export async function atualizarDadosProfessor(req, res) {

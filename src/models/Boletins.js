@@ -42,6 +42,7 @@ export async function cadastrarBoletim(req, res) {
 
 export async function atualizarBoletim(req, res) {
     let boletim = req.body;
+    let idAtualizar = req.params.id
     let status = 0
     if (boletim.nota_final >= 6) {
         status = 1
@@ -49,7 +50,7 @@ export async function atualizarBoletim(req, res) {
         status = 0
     }
     openDb().then(db => {
-        db.run("UPDATE Boletim SET turma_id=?, aluno_id=?, nota_final=?, aprovacao=? WHERE id=?", [boletim.turma_id, boletim.aluno_id, boletim.nota_final, status, boletim.id])
+        db.run("UPDATE Boletim SET turma_id=?, aluno_id=?, nota_final=?, aprovacao=? WHERE id=?", [boletim.turma_id, boletim.aluno_id, boletim.nota_final, status, idAtualizar])
     });
     res.send(
         {
