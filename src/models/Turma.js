@@ -79,10 +79,10 @@ export async function matricularAlunoTurma(req, res) {
             if (aluno.sala_id === validarSala){
 
                 openDb().then(db => {
-                    db.get("SELECT aprovacao FROM Boletim WHERE aluno_id=? AND turma_id=?", [body.aluno_id, body.turma_antiga])
+                    db.get("SELECT 1 FROM Boletim WHERE aluno_id=? AND turma_id=? AND aprovacao=1", [body.aluno_id, body.turma_antiga])
                     .then(aprovacao => {
                         //valida se aluno foi aprovado
-                        if(!!aprovacao){
+                        if(!!aprovacao === true){
 
                             openDb().then(db => {
                                 db.run("INSERT INTO MatricularAluno (turma_id, aluno_id) VALUES (?,?)", [turmaId, body.aluno_id])
