@@ -24,11 +24,17 @@ export async function selecionarAluno(req, res) {
 export async function cadastrarAluno(req, res) {
     let aluno = req.body;
     openDb().then(db => {
-        db.run("INSERT INTO Aluno (nome, cpf, numero_matricula, sala_id) VALUES (?,?,?,?)", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.sala_id])
-    });
-    res.status(201).send(
-       "Cadastrado com sucesso"
-    );
+        db.get("SELECT 1 FROM Aluno WHERE cpf=? OR numero_matricula=?", [aluno.cpf, aluno.numero_matricula]).then(existe => {
+            if (!!existe === true) {
+                res.send("Já existe um aluno com esse CPF e/ou Matrícula.")
+            } else {
+                db.run("INSERT INTO Aluno (nome, cpf, numero_matricula, sala_id) VALUES (?,?,?,?)", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.sala_id])
+                res.status(201).send(
+                    "Cadastrado com sucesso"
+                ); 
+            }
+        }) 
+});
 }
 
 export async function atualizarDadosAluno(req, res) {
@@ -36,11 +42,10 @@ export async function atualizarDadosAluno(req, res) {
         nome: req.body.nome,
         cpf: req.body.cpf,
         numero_matricula: req.body.numero_matricula,
-        sala_id: req.body.sala_id,
         id: req.params.id,
     };
     openDb().then(db => {
-        db.run("UPDATE Aluno SET nome=?, cpf=?, numero_matricula=?, sala_id=? WHERE id=?", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.sala_id, aluno.id])
+        db.run("UPDATE Aluno SET nome=?, cpf=?, numero_matricula=? WHERE id=?", [aluno.nome, aluno.cpf, aluno.numero_matricula, aluno.id])
     });
     res.send("Aleração realizada!")
 }
