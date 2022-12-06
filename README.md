@@ -1,4 +1,10 @@
-# Usabilidade_API_Escola
+# Api Hogwarts de Azkaban
+
+## Integrantes:
+1. [Marina Fernandes](https://github.com/marileite96) 
+2. [Bernardo Mello](https://github.com/bmlogs64)
+3. [Lucas Gabriel](https://github.com/lgmro)
+4. [Luis Carlos](https://github.com/Luis1988xp)
 
 ## O que é necessário para rodar esse projeto? 
 1. [Baixe o Node.js](https://nodejs.org/en/)
