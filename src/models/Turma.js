@@ -55,27 +55,33 @@ export async function matricularAlunoTurma(req, res) {
     let turmaId = req.params.id;
     let body = req.body;
 
-    const bla = body.sala_id - 1;
+    const validarSala = body.sala_id - 1;
     
     await openDb().then(db => {
         db.get("SELECT * FROM Aluno WHERE id=?", [body.aluno_id])
         .then(aluno => {
             //valida se o aluno está no modulo anterior ao que quer matricular
-            if (aluno.sala_id === bla){
+            if (aluno.sala_id === validarSala){
+
                 openDb().then(db => {
-                    db.get("SELECT * FROM Boletim WHERE aluno_id=?", [body.aluno_id])
+                    db.get("SELECT * FROM Boletim WHERE aluno_id=? AND turma_id=?", [body.aluno_id, turmaId])
                     .then(boletim => {
                         //valida se aluno foi aprovado
-                        if(boletim.aprovacao){
+                        if(boletim.aprovacao == 1){
+
                             openDb().then(db => {
                                 db.run("INSERT INTO MatricularAluno (turma_id, aluno_id) VALUES (?,?)", [turmaId, body.aluno_id])
                             });
 
-                            //Todo: fazer update do sala_id do aluno no banco
-
-                            //Todo: update do boletim do aluno para excluir a nota dele ou ver uma forma de criar um novo boletim
+                            //faz o update no banco da nova sala_id(modulo) do aluno
+                            openDb().then(db => {
+                                db.run("UPDATE Aluno SET sala_id=? WHERE id=?", [body.sala_id, aluno.id])
+                            });
+                            
+                            res.send("Aluno Matriculado");
+                        }else {
+                            res.status(400).send(`Aluno Precisa ser aprovado no modulo ${aluno.sala_id}`);
                         }
-                        res.send("Aluno Matriculado");
                     })
                 });
         
