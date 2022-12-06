@@ -51,12 +51,27 @@ export async function deletarTurma(req, res) {
     });
 }
 
+export async function selecionarMatriculas(req, res) {
+    openDb().then(db => {
+        db.all("SELECT * FROM MatricularAluno")
+        .then(matriculas => res.json(matriculas))
+    });
+}
+
+export async function selecionarMatricula(req, res) {
+    let idMatricula = req.params.id;
+    openDb().then(db => {
+        db.get("SELECT * FROM MatricularAluno WHERE id=?", [idMatricula])
+        .then(matricula => res.json(matricula))
+    });
+}
+
 export async function matricularAlunoTurma(req, res) {
     let turmaId = req.params.id;
     let body = req.body;
 
     const validarSala = body.sala_id - 1;
-    
+
     await openDb().then(db => {
         db.get("SELECT * FROM Aluno WHERE id=?", [body.aluno_id])
         .then(aluno => {
@@ -64,10 +79,10 @@ export async function matricularAlunoTurma(req, res) {
             if (aluno.sala_id === validarSala){
 
                 openDb().then(db => {
-                    db.get("SELECT * FROM Boletim WHERE aluno_id=? AND turma_id=?", [body.aluno_id, turmaId])
-                    .then(boletim => {
+                    db.get("SELECT aprovacao FROM Boletim WHERE aluno_id=? AND turma_id=?", [body.aluno_id, body.turma_antiga])
+                    .then(aprovacao => {
                         //valida se aluno foi aprovado
-                        if(boletim.aprovacao == 1){
+                        if(!!aprovacao){
 
                             openDb().then(db => {
                                 db.run("INSERT INTO MatricularAluno (turma_id, aluno_id) VALUES (?,?)", [turmaId, body.aluno_id])
@@ -80,13 +95,18 @@ export async function matricularAlunoTurma(req, res) {
                             
                             res.send("Aluno Matriculado");
                         }else {
-                            res.status(400).send(`Aluno Precisa ser aprovado no modulo ${aluno.sala_id}`);
+                            res.send("Aluno Precisa ser aprovado no modulo ou ele não faz parte dessa turma");
                         }
                     })
                 });
         
+            } else if (aluno.sala_id === 1) {
+                openDb().then(db => {
+                    db.run("INSERT INTO MatricularAluno (turma_id, aluno_id) VALUES (?,?)", [turmaId, body.aluno_id])
+                });
+                res.send("Aluno Matriculado");
             } else {
-                return res.status(400).send("Aluno Náo Matriculado");
+                res.send("Aluno Náo Matriculado");
             }
         })
     });
